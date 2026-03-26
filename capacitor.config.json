@@ -1,0 +1,27 @@
+{
+  "appId": "com.medshift.app",
+  "appName": "Quick Med Support",
+  "webDir": "dist",
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    },
+    "PushNotifications": {
+      "presentationOptions": [
+        "badge",
+        "sound",
+        "alert"
+      ]
+    }
+  },
+  "server": {
+    "androidScheme": "http",
+    "cleartext": true,
+    "url": "http://10.0.2.2:5173",
+    "allowNavigation": [
+      "localhost",
+      "10.0.2.2",
+      "quickmedsupport.duckdns.org"
+    ]
+  }
+}

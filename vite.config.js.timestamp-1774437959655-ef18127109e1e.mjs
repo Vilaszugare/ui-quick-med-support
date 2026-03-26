@@ -1,0 +1,21 @@
+// vite.config.js
+import { defineConfig } from "file:///C:/Users/Vilas/OneDrive/Desktop/mobile%20view/node_modules/vite/dist/node/index.js";
+import react from "file:///C:/Users/Vilas/OneDrive/Desktop/mobile%20view/node_modules/@vitejs/plugin-react/dist/index.js";
+import tailwindcss from "file:///C:/Users/Vilas/OneDrive/Desktop/mobile%20view/node_modules/@tailwindcss/vite/dist/index.mjs";
+var vite_config_default = defineConfig({
+  base: "./",
+  // <--- THIS IS THE MAGIC LINE FOR ANDROID
+  build: { outDir: "dist" },
+  server: {
+    host: true,
+    allowedHosts: ["https://medmis.vercel.app/", "lics-fry.loca.lt"]
+  },
+  plugins: [
+    react(),
+    tailwindcss()
+  ]
+});
+export {
+  vite_config_default as default
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsidml0ZS5jb25maWcuanMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImNvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9kaXJuYW1lID0gXCJDOlxcXFxVc2Vyc1xcXFxWaWxhc1xcXFxPbmVEcml2ZVxcXFxEZXNrdG9wXFxcXG1vYmlsZSB2aWV3XCI7Y29uc3QgX192aXRlX2luamVjdGVkX29yaWdpbmFsX2ZpbGVuYW1lID0gXCJDOlxcXFxVc2Vyc1xcXFxWaWxhc1xcXFxPbmVEcml2ZVxcXFxEZXNrdG9wXFxcXG1vYmlsZSB2aWV3XFxcXHZpdGUuY29uZmlnLmpzXCI7Y29uc3QgX192aXRlX2luamVjdGVkX29yaWdpbmFsX2ltcG9ydF9tZXRhX3VybCA9IFwiZmlsZTovLy9DOi9Vc2Vycy9WaWxhcy9PbmVEcml2ZS9EZXNrdG9wL21vYmlsZSUyMHZpZXcvdml0ZS5jb25maWcuanNcIjtpbXBvcnQgeyBkZWZpbmVDb25maWcgfSBmcm9tICd2aXRlJ1xuaW1wb3J0IHJlYWN0IGZyb20gJ0B2aXRlanMvcGx1Z2luLXJlYWN0J1xuaW1wb3J0IHRhaWx3aW5kY3NzIGZyb20gJ0B0YWlsd2luZGNzcy92aXRlJ1xuXG4vLyBodHRwczovL3ZpdGVqcy5kZXYvY29uZmlnL1xuZXhwb3J0IGRlZmF1bHQgZGVmaW5lQ29uZmlnKHtcbiAgYmFzZTogJy4vJywgLy8gPC0tLSBUSElTIElTIFRIRSBNQUdJQyBMSU5FIEZPUiBBTkRST0lEXG4gIGJ1aWxkOiB7IG91dERpcjogXCJkaXN0XCIgfSxcbiAgc2VydmVyOiB7XG4gICAgaG9zdDogdHJ1ZSxcbiAgICBhbGxvd2VkSG9zdHM6IFsnaHR0cHM6Ly9tZWRtaXMudmVyY2VsLmFwcC8nLCAnbGljcy1mcnkubG9jYS5sdCddXG4gIH0sXG4gIHBsdWdpbnM6IFtcbiAgICByZWFjdCgpLFxuICAgIHRhaWx3aW5kY3NzKCksXG4gIF0sXG59KSJdLAogICJtYXBwaW5ncyI6ICI7QUFBaVUsU0FBUyxvQkFBb0I7QUFDOVYsT0FBTyxXQUFXO0FBQ2xCLE9BQU8saUJBQWlCO0FBR3hCLElBQU8sc0JBQVEsYUFBYTtBQUFBLEVBQzFCLE1BQU07QUFBQTtBQUFBLEVBQ04sT0FBTyxFQUFFLFFBQVEsT0FBTztBQUFBLEVBQ3hCLFFBQVE7QUFBQSxJQUNOLE1BQU07QUFBQSxJQUNOLGNBQWMsQ0FBQyw4QkFBOEIsa0JBQWtCO0FBQUEsRUFDakU7QUFBQSxFQUNBLFNBQVM7QUFBQSxJQUNQLE1BQU07QUFBQSxJQUNOLFlBQVk7QUFBQSxFQUNkO0FBQ0YsQ0FBQzsiLAogICJuYW1lcyI6IFtdCn0K

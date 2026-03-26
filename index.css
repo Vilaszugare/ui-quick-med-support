@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  --color-blue-theme: var(--c-blue);
+  --color-teal-theme: var(--c-teal);
+}
+
+:root {
+  --c-blue: #1A365D;
+  --c-teal: #0D9488;
+  --c-amber: #F59E0B;
+  --c-pearl: #F8FAFC;
+  --c-card: #FFFFFF;
+  --c-green: #10B981;
+  --c-red: #EF4444;
+  --c-text-main: #1A365D;
+  --c-nav-bg: rgba(255,255,255,0.75);
+  --c-border: rgba(226,232,240,0.5);
+  --c-nav-border: rgba(226,232,240,0.8);
+  --c-slate-50: #f8fafc;
+  --c-slate-100: #f1f5f9;
+  --c-slate-300: #cbd5e1;
+  --c-slate-400: #94a3b8;
+  --c-slate-500: #64748b;
+}
+
+.dark {
+  --c-blue: #60A5FA;
+  --c-teal: #2DD4BF;
+  --c-amber: #FBBF24;
+  --c-pearl: #0F172A;
+  --c-card: #1E293B;
+  --c-green: #34D399;
+  --c-red: #F87171;
+  --c-text-main: #F1F5F9;
+  --c-nav-bg: rgba(15,23,42,0.75);
+  --c-border: #334155;
+  --c-nav-border: #334155;
+  --c-slate-50: #0f172a;
+  --c-slate-100: #1e293b;
+  --c-slate-300: #475569;
+  --c-slate-400: #94a3b8;
+  --c-slate-500: #cbd5e1;
+}
+
+body {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  background-color: var(--c-pearl);
+  color: var(--c-text-main);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overscroll-behavior-y: none;
+}
+
+input, textarea {
+  user-select: auto;
+  -webkit-user-select: auto;
+}
+
+#root {
+  padding-top: env(safe-area-inset-top);
+}
+
+.ptr, .ptr__children {
+  background-color: transparent !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  height: 100% !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.ptr__children::-webkit-scrollbar {
+  display: none !important;
+}

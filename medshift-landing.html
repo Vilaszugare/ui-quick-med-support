@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MedShift — Emergency Healthcare Staffing</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-900: #1A365D;
+    --blue-800: #1e4070;
+    --blue-700: #234f85;
+    --teal-600: #0D9488;
+    --teal-500: #14b8a6;
+    --teal-400: #2dd4bf;
+    --amber-500: #F59E0B;
+    --amber-400: #fbbf24;
+    --slate-50: #F8FAFC;
+    --slate-100: #f1f5f9;
+    --slate-200: #e2e8f0;
+    --slate-400: #94a3b8;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --white: #ffffff;
+    --font-main: 'DM Sans', sans-serif;
+    --font-display: 'DM Serif Display', serif;
+    --shadow-card: 0 2px 12px rgba(26,54,93,0.08), 0 1px 3px rgba(26,54,93,0.06);
+    --shadow-card-hover: 0 8px 32px rgba(26,54,93,0.14), 0 2px 8px rgba(26,54,93,0.08);
+    --shadow-nav: 0 1px 0 rgba(26,54,93,0.08), 0 4px 16px rgba(26,54,93,0.06);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-main);
+    background: var(--slate-50);
+    color: var(--blue-900);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--slate-200);
+    box-shadow: var(--shadow-nav);
+  }
+
+  .nav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .nav-logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--blue-900);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-logo-mark::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 12px;
+    background: var(--teal-600);
+    border-radius: 0 0 8px 8px;
+  }
+
+  .nav-logo-mark svg {
+    position: relative;
+    z-index: 1;
+  }
+
+  .nav-logo-text {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--blue-900);
+    letter-spacing: -0.5px;
+  }
+
+  .nav-logo-text span { color: var(--teal-600); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0 auto;
+  }
+
+  .nav-link {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--slate-600);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .nav-link:hover {
+    background: var(--slate-100);
+    color: var(--blue-900);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1.5px solid var(--slate-200);
+    background: var(--white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--slate-500);
+    transition: border-color 0.15s, color 0.15s, box-shadow 0.15s;
+    position: relative;
+  }
+
+  .icon-btn:hover { border-color: var(--teal-600); color: var(--teal-600); box-shadow: 0 0 0 3px rgba(13,148,136,0.1); }
+
+  .notif-dot {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 7px; height: 7px;
+    background: var(--amber-500);
+    border-radius: 50%;
+    border: 1.5px solid var(--white);
+  }
+
+  .avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-700), var(--teal-600));
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 13px; font-weight: 700;
+    cursor: pointer;
+    border: 2px solid var(--white);
+    box-shadow: 0 0 0 2px var(--slate-200);
+    transition: box-shadow 0.15s;
+  }
+
+  .avatar:hover { box-shadow: 0 0 0 2px var(--teal-600); }
+
+  .btn-urgent-nav {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 18px;
+    background: var(--teal-600);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    white-space: nowrap;
+    letter-spacing: -0.1px;
+  }
+
+  .btn-urgent-nav:hover {
+    background: #0b8278;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(13,148,136,0.3);
+  }
+
+  .pulse-dot {
+    width: 7px; height: 7px;
+    background: var(--amber-500);
+    border-radius: 50%;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.4); }
+  }
+
+  .mobile-menu-btn {
+    display: none;
+    width: 40px; height: 40px;
+    align-items: center; justify-content: center;
+    border: 1.5px solid var(--slate-200);
+    background: var(--white);
+    border-radius: 10px;
+    cursor: pointer;
+    color: var(--slate-600);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: calc(100vh - 68px);
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    background: var(--white);
+  }
+
+  .hero-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(26,54,93,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26,54,93,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .hero-bg-gradient {
+    position: absolute;
+    top: -200px; right: -100px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(13,148,136,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-bg-gradient-2 {
+    position: absolute;
+    bottom: -150px; left: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(26,54,93,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 60px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.25);
+    color: #b45309;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 28px;
+    letter-spacing: 0.1px;
+  }
+
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    background: var(--amber-500);
+    border-radius: 50%;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(38px, 5vw, 58px);
+    font-weight: 400;
+    color: var(--blue-900);
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--teal-600);
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--slate-500);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 40px;
+    font-weight: 400;
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 48px;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 15px 28px;
+    background: var(--teal-600);
+    color: white;
+    font-family: var(--font-main);
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.18s;
+    letter-spacing: -0.2px;
+  }
+
+  .btn-primary:hover {
+    background: #0b8278;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(13,148,136,0.35);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 15px 28px;
+    background: transparent;
+    color: var(--blue-900);
+    font-family: var(--font-main);
+    font-size: 15px;
+    font-weight: 600;
+    border: 2px solid var(--slate-200);
+    border-radius: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.18s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--blue-900);
+    background: var(--blue-900);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(26,54,93,0.2);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+  }
+
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--blue-900);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 12.5px;
+    color: var(--slate-400);
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+
+  .stat-divider {
+    width: 1px;
+    background: var(--slate-200);
+    align-self: stretch;
+  }
+
+  /* ── HERO ILLUSTRATION ── */
+  .hero-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-card-main {
+    background: var(--white);
+    border-radius: 20px;
+    border: 1px solid var(--slate-200);
+    box-shadow: var(--shadow-card-hover);
+    padding: 32px;
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    z-index: 2;
+    animation: float 5s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .shift-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .urgent-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(245,158,11,0.1);
+    color: #92400e;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 100px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .shift-timer {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal-600);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .shift-role {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--blue-900);
+    margin-bottom: 6px;
+  }
+
+  .shift-hospital {
+    font-size: 14px;
+    color: var(--slate-500);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .shift-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .shift-detail-item {
+    background: var(--slate-50);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+
+  .detail-label {
+    font-size: 11px;
+    color: var(--slate-400);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .detail-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--blue-900);
+  }
+
+  .shift-accept-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--teal-600);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: var(--font-main);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .shift-accept-btn:hover { background: #0b8278; }
+
+  .floating-badge {
+    position: absolute;
+    background: var(--white);
+    border-radius: 14px;
+    border: 1px solid var(--slate-200);
+    box-shadow: var(--shadow-card-hover);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--blue-900);
+    z-index: 3;
+  }
+
+  .float-badge-1 {
+    top: -24px;
+    right: -32px;
+    animation: float2 4s ease-in-out infinite 1s;
+  }
+
+  .float-badge-2 {
+    bottom: -24px;
+    left: -32px;
+    animation: float2 4.5s ease-in-out infinite 0.5s;
+  }
+
+  @keyframes float2 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .badge-icon {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .badge-icon.green { background: rgba(13,148,136,0.1); color: var(--teal-600); }
+  .badge-icon.amber { background: rgba(245,158,11,0.1); color: var(--amber-500); }
+
+  /* ── HOW IT WORKS ── */
+  .section {
+    padding: 100px 24px;
+  }
+
+  .section-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal-600);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(30px, 4vw, 44px);
+    font-weight: 400;
+    color: var(--blue-900);
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+  }
+
+  .section-sub {
+    font-size: 16.5px;
+    color: var(--slate-500);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 60px;
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    position: relative;
+  }
+
+  .steps-connector {
+    position: absolute;
+    top: 52px;
+    left: calc(33.33% - 12px);
+    right: calc(33.33% - 12px);
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal-600), var(--teal-400));
+    z-index: 0;
+  }
+
+  .steps-connector::before,
+  .steps-connector::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px; height: 8px;
+    background: var(--teal-600);
+    border-radius: 50%;
+  }
+  .steps-connector::before { left: -4px; }
+  .steps-connector::after { right: -4px; }
+
+  .step-card {
+    background: var(--white);
+    border-radius: 20px;
+    border: 1px solid var(--slate-200);
+    padding: 32px 28px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .step-card:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-4px);
+  }
+
+  .step-number {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px; height: 28px;
+    background: var(--blue-900);
+    color: white;
+    font-size: 12px;
+    font-weight: 800;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .step-icon-wrap {
+    width: 64px; height: 64px;
+    background: rgba(13,148,136,0.08);
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    color: var(--teal-600);
+    transition: background 0.2s;
+  }
+
+  .step-card:hover .step-icon-wrap { background: rgba(13,148,136,0.14); }
+
+  .step-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--blue-900);
+    margin-bottom: 10px;
+    letter-spacing: -0.2px;
+  }
+
+  .step-card p {
+    font-size: 14.5px;
+    color: var(--slate-500);
+    line-height: 1.65;
+  }
+
+  /* ── LIVE JOB BOARD ── */
+  .job-board-section {
+    background: var(--blue-900);
+    padding: 80px 0;
+    overflow: hidden;
+  }
+
+  .job-board-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+    margin-bottom: 40px;
+  }
+
+  .job-board-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .section-title.white { color: var(--white); }
+  .section-sub.white { color: rgba(255,255,255,0.6); }
+  .section-tag.white { color: var(--teal-400); }
+
+  .live-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245,158,11,0.15);
+    border: 1px solid rgba(245,158,11,0.3);
+    color: var(--amber-400);
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 100px;
+    letter-spacing: 0.3px;
+    margin-bottom: 40px;
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 16px;
+    animation: marquee 28s linear infinite;
+    width: max-content;
+    padding: 0 8px;
+  }
+
+  .marquee-track:hover { animation-play-state: paused; }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .job-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 20px 22px;
+    min-width: 280px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .job-card:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(13,148,136,0.4);
+  }
+
+  .job-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .job-role {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .job-hospital {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.55);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .job-rate {
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--teal-400);
+    line-height: 1;
+  }
+
+  .job-rate span {
+    font-family: var(--font-main);
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 500;
+  }
+
+  .job-filled-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(13,148,136,0.15);
+    color: var(--teal-400);
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.3px;
+    margin-top: 12px;
+  }
+
+  .job-meta {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-section {
+    background: var(--slate-50);
+    padding: 100px 24px;
+  }
+
+  .testimonials-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .testimonial-card {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 20px;
+    padding: 32px;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .testimonial-card:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-3px);
+  }
+
+  .testimonial-card.featured {
+    background: var(--blue-900);
+    border-color: var(--blue-900);
+    grid-row: span 1;
+  }
+
+  .stars {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 16px;
+  }
+
+  .star { color: var(--amber-500); }
+
+  .testimonial-text {
+    font-size: 15.5px;
+    color: var(--slate-600);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+
+  .testimonial-card.featured .testimonial-text { color: rgba(255,255,255,0.8); }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .author-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .author-name {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--blue-900);
+    margin-bottom: 2px;
+  }
+
+  .testimonial-card.featured .author-name { color: white; }
+
+  .author-role {
+    font-size: 12.5px;
+    color: var(--slate-400);
+  }
+
+  .testimonial-card.featured .author-role { color: rgba(255,255,255,0.5); }
+
+  /* ── CTA BANNER ── */
+  .cta-section {
+    padding: 80px 24px;
+    background: var(--white);
+  }
+
+  .cta-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .cta-banner {
+    background: linear-gradient(135deg, var(--blue-900) 0%, #1e4b8f 50%, var(--blue-800) 100%);
+    border-radius: 28px;
+    padding: 64px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 48px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-banner::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: 200px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(13,148,136,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-banner::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-content { position: relative; z-index: 1; }
+
+  .cta-title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 38px);
+    color: white;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  .cta-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+  }
+
+  .cta-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
+  .btn-cta-white {
+    padding: 15px 32px;
+    background: white;
+    color: var(--blue-900);
+    font-family: var(--font-main);
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-cta-white:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+
+  .btn-cta-outline {
+    padding: 14px 32px;
+    background: transparent;
+    color: white;
+    font-family: var(--font-main);
+    font-size: 14.5px;
+    font-weight: 600;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-cta-outline:hover { border-color: white; background: rgba(255,255,255,0.08); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--blue-900);
+    color: rgba(255,255,255,0.7);
+    padding: 64px 24px 32px;
+  }
+
+  .footer-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 32px;
+  }
+
+  .footer-brand {}
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .footer-logo-mark {
+    width: 34px; height: 34px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .footer-logo-text {
+    font-size: 18px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.4px;
+  }
+
+  .footer-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    max-width: 260px;
+  }
+
+  .footer-emergency {
+    background: rgba(245,158,11,0.12);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .footer-emergency-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--amber-400);
+    margin-bottom: 2px;
+  }
+
+  .footer-emergency-num {
+    font-size: 18px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.3px;
+  }
+
+  .footer-col h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+  .footer-col a {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .footer-col a:hover { color: var(--teal-400); }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .footer-copy {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .footer-copy a { color: rgba(255,255,255,0.4); text-decoration: none; }
+  .footer-copy a:hover { color: var(--teal-400); }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-links a {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+  .footer-socials {
+    display: flex;
+    gap: 10px;
+  }
+
+  .social-btn {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+
+  .social-btn:hover { background: rgba(13,148,136,0.2); border-color: var(--teal-600); color: var(--teal-400); }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .fade-up-delay-1 { transition-delay: 0.1s; }
+  .fade-up-delay-2 { transition-delay: 0.2s; }
+  .fade-up-delay-3 { transition-delay: 0.3s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 48px; padding: 60px 24px; }
+    .hero-visual { display: none; }
+    .testimonials-grid { grid-template-columns: 1fr 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .cta-banner { grid-template-columns: 1fr; padding: 40px; }
+    .cta-actions { flex-direction: row; }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .btn-urgent-nav { display: none; }
+    .mobile-menu-btn { display: flex; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .steps-connector { display: none; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 20px; }
+    .hero-ctas { flex-direction: column; }
+    .hero-ctas .btn-primary, .hero-ctas .btn-secondary { text-align: center; justify-content: center; }
+    .footer-top { grid-template-columns: 1fr; gap: 32px; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .cta-banner { padding: 32px 24px; }
+    .cta-actions { flex-direction: column; }
+    .section { padding: 64px 24px; }
+  }
+
+  @media (max-width: 480px) {
+    .nav-inner { padding: 0 16px; gap: 12px; }
+    .hero-stats { flex-wrap: wrap; gap: 16px; }
+    .stat-divider { display: none; }
+  }
+
+  /* ── MISC UTILS ── */
+  .check-icon {
+    width: 18px; height: 18px;
+    background: rgba(13,148,136,0.12);
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--teal-600);
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ NAVBAR ══════════════ -->
+<nav>
+  <div class="nav-inner">
+    <!-- Logo -->
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 2v12M2 8h12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">Med<span>Shift</span></span>
+    </a>
+
+    <!-- Center Links -->
+    <div class="nav-links">
+      <a href="#" class="nav-link">Find Work</a>
+      <a href="#" class="nav-link">Hire Staff</a>
+      <a href="#" class="nav-link">Community</a>
+      <a href="#" class="nav-link">Resources</a>
+    </div>
+
+    <!-- Right Side -->
+    <div class="nav-right">
+      <button class="icon-btn" title="Notifications">
+        <div class="notif-dot"></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+      </button>
+      <div class="avatar" title="Profile">JD</div>
+      <a href="#" class="btn-urgent-nav">
+        <div class="pulse-dot"></div>
+        Urgent Request
+      </a>
+      <button class="mobile-menu-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-bg-gradient"></div>
+  <div class="hero-bg-gradient-2"></div>
+
+  <div class="hero-inner">
+    <!-- Left -->
+    <div>
+      <div class="hero-badge fade-up visible">
+        <div class="hero-badge-dot"></div>
+        Now live in 48 cities across India
+      </div>
+
+      <h1 class="hero-title fade-up visible">
+        The <em>Lifeline</em><br/>for Healthcare<br/>Staffing.
+      </h1>
+
+      <p class="hero-sub fade-up visible fade-up-delay-1">
+        Connect with verified MRI, X-Ray, and medical technicians in under 60 minutes. Built for the moments that cannot wait.
+      </p>
+
+      <div class="hero-ctas fade-up visible fade-up-delay-2">
+        <a href="#" class="btn-primary">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          I Need a Technician (Urgent)
+        </a>
+        <a href="#" class="btn-secondary">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          I'm a Technician
+        </a>
+      </div>
+
+      <div class="hero-stats fade-up visible fade-up-delay-3">
+        <div class="hero-stat">
+          <span class="stat-num">4,200+</span>
+          <span class="stat-label">Verified Techs</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="hero-stat">
+          <span class="stat-num">&lt;42 min</span>
+          <span class="stat-label">Avg. Fill Time</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="hero-stat">
+          <span class="stat-num">98.6%</span>
+          <span class="stat-label">Shift Completion</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Visual -->
+    <div class="hero-visual">
+      <div class="hero-card-main">
+        <div class="shift-card-header">
+          <div class="urgent-tag">
+            <div class="pulse-dot"></div>
+            Urgent
+          </div>
+          <div class="shift-timer">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Starts in 2h 15m
+          </div>
+        </div>
+
+        <div class="shift-role">MRI Technologist</div>
+        <div class="shift-hospital">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Fortis Memorial, Gurgaon
+        </div>
+
+        <div class="shift-details">
+          <div class="shift-detail-item">
+            <div class="detail-label">Shift Time</div>
+            <div class="detail-value">10 PM – 6 AM</div>
+          </div>
+          <div class="shift-detail-item">
+            <div class="detail-label">Rate / hr</div>
+            <div class="detail-value" style="color:var(--teal-600)">₹1,850</div>
+          </div>
+          <div class="shift-detail-item">
+            <div class="detail-label">Duration</div>
+            <div class="detail-value">8 Hours</div>
+          </div>
+          <div class="shift-detail-item">
+            <div class="detail-label">Exp. Required</div>
+            <div class="detail-value">3+ Yrs</div>
+          </div>
+        </div>
+
+        <button class="shift-accept-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Accept Shift
+        </button>
+      </div>
+
+      <!-- Floating badges -->
+      <div class="floating-badge float-badge-1">
+        <div class="badge-icon green">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--slate-400);margin-bottom:2px">Shift Filled</div>
+          <div style="font-size:14px;font-weight:700;color:var(--blue-900)">CT Tech · Apollo</div>
+        </div>
+      </div>
+
+      <div class="floating-badge float-badge-2">
+        <div class="badge-icon amber">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--slate-400);margin-bottom:2px">New Request</div>
+          <div style="font-size:14px;font-weight:700;color:var(--blue-900)">X-Ray · AIIMS Delhi</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ HOW IT WORKS ══════════════ -->
+<section class="section" style="background: var(--slate-50);">
+  <div class="section-inner">
+    <span class="section-tag fade-up">Process</span>
+    <h2 class="section-title fade-up">Three steps.<br/>One urgent solution.</h2>
+    <p class="section-sub fade-up">From gap to filled — faster than your backup plan.</p>
+
+    <div class="steps-grid">
+      <div class="steps-connector"></div>
+
+      <div class="step-card fade-up">
+        <div class="step-number">1</div>
+        <div class="step-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </div>
+        <h3>Post an Urgent Shift</h3>
+        <p>Fill out a quick form with role, timing, and requirements. Takes under 90 seconds from any device.</p>
+      </div>
+
+      <div class="step-card fade-up fade-up-delay-1">
+        <div class="step-number">2</div>
+        <div class="step-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <h3>Instant Smart Match</h3>
+        <p>Our algorithm surfaces pre-verified, available technicians within your radius in real-time. No cold calls.</p>
+      </div>
+
+      <div class="step-card fade-up fade-up-delay-2">
+        <div class="step-number">3</div>
+        <div class="step-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h3>Verified Tech Arrives</h3>
+        <p>A credentialed, background-checked professional shows up on time — with digital check-in confirmation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ LIVE JOB BOARD ══════════════ -->
+<section class="job-board-section">
+  <div class="job-board-inner">
+    <div class="job-board-header">
+      <div>
+        <span class="section-tag white">Live Activity</span>
+        <h2 class="section-title white fade-up">Recent Shifts Filled</h2>
+        <p class="section-sub white fade-up">Our platform never sleeps. Shifts are filled around the clock.</p>
+      </div>
+      <div class="live-indicator">
+        <div class="pulse-dot"></div>
+        247 shifts active right now
+      </div>
+    </div>
+  </div>
+
+  <!-- Marquee Row 1 -->
+  <div style="overflow:hidden; margin-bottom: 14px;">
+    <div class="marquee-track" id="marquee1">
+      <!-- Cards duplicated for infinite loop -->
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">MRI Technologist</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Fortis, Gurgaon</div></div><div><div class="job-rate">₹1,850<span>/hr</span></div></div></div><div class="job-meta"><span>Night · 8hrs</span><span>4.2km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 14 min ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">X-Ray Technician</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>AIIMS, New Delhi</div></div><div><div class="job-rate">₹1,200<span>/hr</span></div></div></div><div class="job-meta"><span>Day · 6hrs</span><span>1.8km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 28 min ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">CT Scan Tech</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Apollo, Mumbai</div></div><div><div class="job-rate">₹2,100<span>/hr</span></div></div></div><div class="job-meta"><span>Eve · 10hrs</span><span>3.1km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 41 min ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">Ultrasound Tech</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Max, Saket</div></div><div><div class="job-rate">₹1,600<span>/hr</span></div></div></div><div class="job-meta"><span>Night · 8hrs</span><span>6.4km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 1h ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">Nuclear Med Tech</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Medanta, Gurugram</div></div><div><div class="job-rate">₹2,400<span>/hr</span></div></div></div><div class="job-meta"><span>Day · 12hrs</span><span>2.2km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 1h 20m ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">Mammography Tech</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Narayana, Bengaluru</div></div><div><div class="job-rate">₹1,750<span>/hr</span></div></div></div><div class="job-meta"><span>Day · 8hrs</span><span>5.0km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 2h ago</div></div>
+      <!-- Duplicate set for seamless loop -->
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">MRI Technologist</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Fortis, Gurgaon</div></div><div><div class="job-rate">₹1,850<span>/hr</span></div></div></div><div class="job-meta"><span>Night · 8hrs</span><span>4.2km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 14 min ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">X-Ray Technician</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>AIIMS, New Delhi</div></div><div><div class="job-rate">₹1,200<span>/hr</span></div></div></div><div class="job-meta"><span>Day · 6hrs</span><span>1.8km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 28 min ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">CT Scan Tech</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Apollo, Mumbai</div></div><div><div class="job-rate">₹2,100<span>/hr</span></div></div></div><div class="job-meta"><span>Eve · 10hrs</span><span>3.1km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 41 min ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">Ultrasound Tech</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Max, Saket</div></div><div><div class="job-rate">₹1,600<span>/hr</span></div></div></div><div class="job-meta"><span>Night · 8hrs</span><span>6.4km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 1h ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">Nuclear Med Tech</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Medanta, Gurugram</div></div><div><div class="job-rate">₹2,400<span>/hr</span></div></div></div><div class="job-meta"><span>Day · 12hrs</span><span>2.2km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 1h 20m ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">Mammography Tech</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Narayana, Bengaluru</div></div><div><div class="job-rate">₹1,750<span>/hr</span></div></div></div><div class="job-meta"><span>Day · 8hrs</span><span>5.0km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 2h ago</div></div>
+    </div>
+  </div>
+
+  <!-- Marquee Row 2 (reverse) -->
+  <div style="overflow:hidden;">
+    <div class="marquee-track" style="animation-direction: reverse; animation-duration: 34s;">
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">Cath Lab Tech</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Wockhardt, Mumbai</div></div><div><div class="job-rate">₹2,200<span>/hr</span></div></div></div><div class="job-meta"><span>Eve · 8hrs</span><span>7.3km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 35 min ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">PET Scan Tech</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Tata Memorial, Mumbai</div></div><div><div class="job-rate">₹2,800<span>/hr</span></div></div></div><div class="job-meta"><span>Night · 12hrs</span><span>2.9km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 52 min ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">Radiation Therapist</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>HCG, Bengaluru</div></div><div><div class="job-rate">₹1,950<span>/hr</span></div></div></div><div class="job-meta"><span>Day · 8hrs</span><span>4.5km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 1h 5m ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">MRI Technologist</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Kokilaben, Mumbai</div></div><div><div class="job-rate">₹1,900<span>/hr</span></div></div></div><div class="job-meta"><span>Night · 10hrs</span><span>3.7km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 1h 45m ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">Echocardiography Tech</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Manipal, Bangalore</div></div><div><div class="job-rate">₹1,700<span>/hr</span></div></div></div><div class="job-meta"><span>Day · 6hrs</span><span>1.2km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 2h 10m ago</div></div>
+      <!-- Duplicate -->
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">Cath Lab Tech</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Wockhardt, Mumbai</div></div><div><div class="job-rate">₹2,200<span>/hr</span></div></div></div><div class="job-meta"><span>Eve · 8hrs</span><span>7.3km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 35 min ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">PET Scan Tech</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Tata Memorial, Mumbai</div></div><div><div class="job-rate">₹2,800<span>/hr</span></div></div></div><div class="job-meta"><span>Night · 12hrs</span><span>2.9km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 52 min ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">Radiation Therapist</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>HCG, Bengaluru</div></div><div><div class="job-rate">₹1,950<span>/hr</span></div></div></div><div class="job-meta"><span>Day · 8hrs</span><span>4.5km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 1h 5m ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">MRI Technologist</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Kokilaben, Mumbai</div></div><div><div class="job-rate">₹1,900<span>/hr</span></div></div></div><div class="job-meta"><span>Night · 10hrs</span><span>3.7km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 1h 45m ago</div></div>
+      <div class="job-card"><div class="job-card-top"><div><div class="job-role">Echocardiography Tech</div><div class="job-hospital"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Manipal, Bangalore</div></div><div><div class="job-rate">₹1,700<span>/hr</span></div></div></div><div class="job-meta"><span>Day · 6hrs</span><span>1.2km away</span></div><div class="job-filled-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Filled · 2h 10m ago</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ TESTIMONIALS ══════════════ -->
+<section class="testimonials-section">
+  <div class="testimonials-inner">
+    <span class="section-tag fade-up">Social Proof</span>
+    <h2 class="section-title fade-up">Trusted by those who<br/>can't afford to wait.</h2>
+    <p class="section-sub fade-up">From department heads to senior technicians — here's what they say.</p>
+
+    <div class="testimonials-grid">
+      <!-- Card 1 -->
+      <div class="testimonial-card fade-up">
+        <div class="stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="testimonial-text">"At 2 AM, our MRI tech called in sick with 4 patients scheduled. MedShift had a verified replacement on-site in 38 minutes. I still can't believe it."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#1A365D,#234f85);color:white;">RS</div>
+          <div>
+            <div class="author-name">Dr. Rajesh Sharma</div>
+            <div class="author-role">Radiology Head · Fortis Gurgaon</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 — Featured -->
+      <div class="testimonial-card featured fade-up fade-up-delay-1">
+        <div class="stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="testimonial-text">"Before MedShift, a last-minute gap meant cancelling CT appointments and disappointing patients. Now it's just a 90-second form. This platform is genuinely life-changing."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,var(--teal-600),var(--teal-400));color:white;">PK</div>
+          <div>
+            <div class="author-name">Priya Krishnamurthy</div>
+            <div class="author-role">Hospital Manager · Apollo Hospitals</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="testimonial-card fade-up fade-up-delay-2">
+        <div class="stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="testimonial-text">"I've done 47 shifts through MedShift in 6 months. The pay is transparent, check-in is digital, and I've never had a payment delay. It's the best platform for freelance techs."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,var(--amber-500),#fbbf24);color:white;">AM</div>
+          <div>
+            <div class="author-name">Arjun Mehta</div>
+            <div class="author-role">Senior MRI Tech · 4.9★ · 47 shifts</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="testimonial-card fade-up">
+        <div class="stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="testimonial-text">"Every technician we've received has been verified, professional, and competent. The credential checks MedShift runs are more thorough than our own hiring process."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);color:white;">SN</div>
+          <div>
+            <div class="author-name">Dr. Sunita Nair</div>
+            <div class="author-role">CMO · Narayana Health, Bengaluru</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="testimonial-card fade-up fade-up-delay-1">
+        <div class="stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="testimonial-text">"I was nervous about gig-style healthcare work, but MedShift's community and support team made it seamless. I now choose my own hours without sacrificing stability."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#db2777,#f472b6);color:white;">FZ</div>
+          <div>
+            <div class="author-name">Fatima Zahra</div>
+            <div class="author-role">X-Ray Technician · 4.8★ · 31 shifts</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="testimonial-card fade-up fade-up-delay-2">
+        <div class="stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="testimonial-text">"The real-time matching is incredible. We posted a PET scan tech vacancy at 7 PM and had someone confirmed by 7:43 PM. Zero phone calls. Pure magic."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#059669,#34d399);color:white;">VR</div>
+          <div>
+            <div class="author-name">Vikram Rao</div>
+            <div class="author-role">Operations Director · Tata Memorial</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ CTA BANNER ══════════════ -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <div class="cta-banner fade-up">
+      <div class="cta-content">
+        <h2 class="cta-title">Ready to end staffing<br/>emergencies for good?</h2>
+        <p class="cta-sub">Join 320+ hospitals and 4,200+ technicians already on MedShift.<br/>Setup takes 5 minutes. First shift match is free.</p>
+      </div>
+      <div class="cta-actions">
+        <a href="#" class="btn-cta-white">Hire a Technician Now</a>
+        <a href="#" class="btn-cta-outline">Join as a Technician</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <!-- Brand -->
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-mark">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 2v12M2 8h12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="footer-logo-text">MedShift</span>
+        </div>
+        <p class="footer-desc">The emergency staffing platform for healthcare. Connecting verified medical technicians with hospitals in minutes, not hours.</p>
+        <div class="footer-emergency">
+          <div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.37a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="footer-emergency-label">🚨 Emergency Help Line</div>
+            <div class="footer-emergency-num">1800-MED-SHIFT</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Col 2 -->
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#">Find Work</a></li>
+          <li><a href="#">Hire Staff</a></li>
+          <li><a href="#">Community Feed</a></li>
+          <li><a href="#">Urgent Requests</a></li>
+          <li><a href="#">Shift Calendar</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3 -->
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">How It Works</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press Kit</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4 -->
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Verification Docs</a></li>
+          <li><a href="#">Report an Issue</a></li>
+          <li><a href="#">Trust & Safety</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <div class="footer-copy">
+        © 2026 MedShift Technologies Pvt. Ltd. · <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a>
+      </div>
+      <div class="footer-links">
+        <a href="#">HIPAA Compliant</a>
+        <a href="#">ISO 27001</a>
+        <a href="#">Sitemap</a>
+      </div>
+      <div class="footer-socials">
+        <a href="#" class="social-btn" title="LinkedIn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="#" class="social-btn" title="Twitter/X">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l16 16M4 20L20 4"/></svg>
+        </a>
+        <a href="#" class="social-btn" title="Instagram">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll-triggered fade-up animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-up:not(.visible)').forEach(el => observer.observe(el));
+
+  // Animated counter for hero stats
+  function animateCounter(el, target, suffix = '') {
+    const start = Date.now();
+    const duration = 1800;
+    const isDecimal = target % 1 !== 0;
+
+    const tick = () => {
+      const elapsed = Date.now() - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const val = isDecimal ? (eased * target).toFixed(1) : Math.round(eased * target);
+      el.textContent = val + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  // Trigger counter animation on scroll
+  const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        statsObserver.unobserve(entry.target);
+        const nums = entry.target.querySelectorAll('.stat-num');
+        nums.forEach(num => {
+          const text = num.textContent;
+          if (text.includes('4,200')) { num.textContent = '0+'; animateCounter(num, 4200, '+'); }
+          if (text.includes('42')) { num.textContent = '< 0 min'; }
+          if (text.includes('98.6')) { num.textContent = '0%'; animateCounter(num, 98.6, '%'); }
+        });
+      }
+    });
+  }, { threshold: 0.5 });
+
+  const statsEl = document.querySelector('.hero-stats');
+  if (statsEl) statsObserver.observe(statsEl);
+</script>
+</body>
+</html>
